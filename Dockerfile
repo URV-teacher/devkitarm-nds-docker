@@ -5,7 +5,6 @@ FROM debian:latest
 # Added DESMUME for compatibility with Makefile that need DESMUME env variable defined, even if it is not needed for compilation
 ENV DEVKITPRO=/bmde/devkitPro \
     DEVKITARM=/bmde/devkitPro/devkitARM \
-    DLDITOOL=/bmde/dlditool \
     PATH=/bmde/devkitPro/devkitARM/bin:/bmde/dlditool/bin:$PATH \
     DESMUME="/"
 
@@ -27,14 +26,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY ./data/libnds.tar.bz2 /bmde/devkitPro/
 RUN tar -xvjf $DEVKITPRO/libnds.tar.bz2 -C $DEVKITPRO/ \
     && rm $DEVKITPRO/libnds.tar.bz2
-
-# Add dlditool and the mpcf patch
-RUN mkdir -p $DLDITOOL/bin && \
-    wget --no-check-certificate https://www.chishm.com/DLDI/downloads/mpcf.dldi -O $DLDITOOL/mpcf.dldi && \
-    wget --no-check-certificate https://www.chishm.com/DLDI/downloads/dlditool-linux-x86_64.zip -O /tmp/dlditool.zip && \
-    unzip -o /tmp/dlditool.zip -d $DLDITOOL/bin && \
-    chmod +x $DLDITOOL/bin/dlditool && \
-    rm /tmp/dlditool.zip
 
 # Remove used packages to make it lighter
 RUN apt-get purge -y \
