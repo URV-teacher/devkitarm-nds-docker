@@ -1,6 +1,7 @@
 # This is a development compose.yml. Use the one in examples/compose.yml to bootstrap a template for your project
 services:
   bmde-linux:
+    pull_policy: always
     image: aleixmt/bmde-linux:latest
     container_name: bmde-linux
     build:

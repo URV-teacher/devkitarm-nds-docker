@@ -1,5 +1,6 @@
 services:
   bmde-linux:
+    pull_policy: always
     image: aleixmt/bmde-linux:latest
     container_name: bmde-linux
     # Uncomment the following lines to build from a local Dockerfile instead of pulling from Docker Hub. You may use
