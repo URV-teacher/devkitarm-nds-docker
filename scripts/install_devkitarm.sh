@@ -1,3 +1,4 @@
+#!/bin/bash
 set -eo pipefail
 
 export DEVKITPRO="$HOME/bmde/devkitPro"
@@ -21,18 +22,17 @@ fi
 mkdir -p "$DEVKITPRO" "$DEVKITARM"
 
 # Download and install devkitARM only if not already installed
-if [ ! -f "$DEVKITARM/bin/arm-none-eabi-gcc" ]; then
-    wget --no-check-certificate "https://wii.leseratte10.de/devkitPro/devkitARM/r46%20%282017%29/devkitARM_r46-x86_64-linux.tar.bz2" -O /tmp/devkitARM.tar.bz2 \
-    && tar -xf /tmp/devkitARM.tar.bz2 -C "$DEVKITPRO" \
-    && rm /tmp/devkitARM.tar.bz2
-else
-    echo "devkitARM already installed in $DEVKITARM"
-fi
+rm -f /tmp/devkitARM.tar.bz2
+wget --no-check-certificate "https://wii.leseratte10.de/devkitPro/devkitARM/r46%20%282017%29/devkitARM_r46-x86_64-linux.tar.bz2" -O /tmp/devkitARM.tar.bz2 \
+rm -rf "$DEVKITARM"
+tar -xf /tmp/devkitARM.tar.bz2 -C "$DEVKITPRO" \
+rm /tmp/devkitARM.tar.bz2
+
 
 # Copy examples if they exist in current directory and destination doesn't have them
-if [ ! -d "$DEVKITPRO/examples" ]; then
-    wget https://raw.githubusercontent.com/URV-teacher/devkitarm-nds-docker/master/data/examples.tar.bz2 -O /tmp/examples.tar.bz2
-    tar -xjf /tmp/examples.tar.bz2 -C $DEVKITPRO
-    rm /tmp/examples.tar.bz2
-fi
+rm -f /tmp/examples.tar.bz2
+wget https://raw.githubusercontent.com/URV-teacher/devkitarm-nds-docker/master/data/examples.tar.bz2 -O /tmp/examples.tar.bz2
+rm -rf "$DEVKITPRO/examples"
+tar -xjf /tmp/examples.tar.bz2 -C "$DEVKITPRO"
+rm /tmp/examples.tar.bz2
 

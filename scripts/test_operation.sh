@@ -1,8 +1,8 @@
+#!/bin/bash
 set -eo pipefail
 
-if [ ! -d /tmp/hello-world-nds ]; then
-  git clone https://github.com/URV-teacher/hello-world-nds.git /tmp/hello-world-nds
-fi
+rm -rf /tmp/hello-world-nds
+git clone https://github.com/URV-teacher/hello-world-nds.git /tmp/hello-world-nds
 
 (
   cd hello-world-nds
