@@ -189,16 +189,20 @@ you can communicate a folder from inside the container with a folder of your hos
 run` command to mount a volume. I will not explain it because it is better to use the `compose.yml` through `docker
 compose`, which automatically mounts volumes.
 
-
 ## Install it directly into your Linux system for manual usage
-The scripts in `scripts/` install the same environment of the image into an Ubuntu / Debian system (the image is built
+`scripts/download_assets.sh` downloads devkitARM r46 (and the project used by the tests) into `assets/`, checking it
+against its pinned SHA-256 (see
+[external resources](https://github.com/URV-teacher/bmde/blob/master/docs/development/external-resources.md) of bmde).
+Then the scripts in `src/` install the same environment of the image into an Ubuntu / Debian system (the image is built
 with them), into `/URV/bmde/devkitPro`, with its environment (`DEVKITPRO`, `DEVKITARM`, `PATH`) in
-`/etc/profile.d/bmde-devkitpro.sh`:
+`/etc/profile.d/bmde-devkitpro.sh`, taking the files only from `src/` and `assets/` (where libnds and the examples of
+the course are stored in the repository):
 ```shell
-scripts/install_make.sh
-scripts/install_devkitarm.sh
-scripts/install_libnds.sh
-scripts/install_examples.sh  # optional
+scripts/download_assets.sh
+src/install_make.sh
+src/install_devkitarm.sh
+src/install_libnds.sh
+src/install_examples.sh  # optional
 ```
 
 Open a new session (or run `. /etc/profile.d/bmde-devkitpro.sh`) and test the installation with the `test/test_*.sh`
@@ -277,10 +281,14 @@ bmde-linux-test-1  | Test failed for arm9lib/win_build/libarm9lib.a c28f729e521b
 bmde-linux-test-1  | 65 out of 76 tests passed.
 ```
 
-You can reproduce these results by yourself by using
+`test/test_windows_builds.sh` repeats this comparison: it builds the examples with the installed devkitARM and compares
+their binaries with the SHA-1 of the binaries built by the Windows BMDE (`test/windows_builds.sha1`). It fails if a
+binary differs, unless it is one of the known differences (`test/windows_builds_known_differences.txt`): the ones above,
+and `nitrodir.nds`, which embeds the files of `nitrofiles/` in the order in which the file system lists them (it is the
+same binary when they are listed alphabetically, as in Windows). Run it in the image:
+
 ```shell
-cd bmde-linux/test
-docker compose up --build
+docker run --rm --entrypoint bash -v "$PWD:/component:ro" aleixmt/bmde-linux /component/test/test_windows_builds.sh
 ```
 
 

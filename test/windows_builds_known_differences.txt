@@ -1,0 +1,16 @@
+# Binaries of windows_builds.sha1 that are known to differ from the ones built by the Windows BMDE, so they do not make
+# test_windows_builds.sh fail. All of them differed since the first comparison (see README.md), except nitrodir.nds.
+Graphics/3D/Display_List/Display_List.nds
+Graphics/3D/Display_List_2/Display_List_2.nds
+Graphics/3D/Env_Mapping/Env_Mapping.nds
+Graphics/3D/Picking/Picking.nds
+Graphics/3D/Toon_Shading/Toon_Shading.nds
+Graphics/Backgrounds/256_color_bmp/256_color_bmp.nds
+Graphics/Backgrounds/all_in_one/all_in_one.nds
+Graphics/Backgrounds/rotation/rotation.nds
+Graphics/Effects/windows/windows.nds
+Graphics/Ext_Palettes/backgrounds/backgrounds.nds
+templates/arm9lib/lib/libarm9lib.a
+# The files of nitrofiles/ are embedded in the order in which the file system lists them: it is the same binary when
+# they are listed alphabetically, as in Windows
+filesystem/nitrofs/nitrodir/nitrodir.nds

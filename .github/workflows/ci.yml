@@ -12,15 +12,12 @@ jobs:
     uses: URV-teacher/bmde/.github/workflows/component-image.yml@master
     with:
       image: aleixmt/bmde-linux
-      # The reusable workflows run the tests from scripts/, so they are referenced relative to it
-      tests: ../test/test_make.sh ../test/test_devkitarm.sh ../test/test_libnds.sh ../test/test_examples.sh
+      tests: test_make.sh test_devkitarm.sh test_libnds.sh test_examples.sh test_windows_builds.sh
     secrets: inherit
 
   host:
     uses: URV-teacher/bmde/.github/workflows/component-host.yml@master
     with:
       install: install_make.sh install_devkitarm.sh install_libnds.sh install_examples.sh
-      # The reusable workflows run the tests from scripts/, so they are referenced relative to it
       tests: >-
-        ../test/test_make.sh ../test/test_devkitarm.sh ../test/test_libnds.sh ../test/test_examples.sh
-        ../test/test_operation.sh
+        test_make.sh test_devkitarm.sh test_libnds.sh test_examples.sh test_windows_builds.sh test_operation.sh
