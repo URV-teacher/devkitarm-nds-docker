@@ -191,49 +191,19 @@ compose`, which automatically mounts volumes.
 
 
 ## Install it directly into your Linux system for manual usage
-This is not the preferred way to run this software, but is possible to do it, though I am (currently) not providing
-scripts to automatically do so. I will provide some instructions if someone wants to try it out, since surprisingly with
-the right binaries the environment works with minor changes.
-
-1. Download devkitARM from [here](https://wii.leseratte10.de/devkitPro/devkitARM/r46%20%282017%29/) and decompress it.
-2. Decompress `libnds.tar.bz2` from the `data` folder of this repository.
-3. Mount the following tree from any file system point of your like, but this will condition the subsequent steps:
-```
-/ANY_FOLDER/
-/ANY_FOLDER/devkitPro/
-/ANY_FOLDER/devkitPro/devkitARM
-/ANY_FOLDER/devkitPro/libnds
-```
-Also, create the environment variables `DEVKITPRO=/ANY_FOLDER/devkitPro`, `DEVKITARM=$DEVKITPRO/devkitARM` and
-`DESMUME="/"`. This last variable has a "dummy" definition because it is needed for compatibility purposes. Also add the
-path `$DEVKITARM/bin` into the beginning of the `PATH` environment variable.
-
-You can do it with:
+The scripts in `scripts/` install the same environment of the image into an Ubuntu / Debian system (the image is built
+with them), into `/URV/bmde/devkitPro`, with its environment (`DEVKITPRO`, `DEVKITARM`, `PATH`) in
+`/etc/profile.d/bmde-devkitpro.sh`:
 ```shell
-PATH=$DEVKITARM/bin:$PATH
+scripts/install_make.sh
+scripts/install_devkitarm.sh
+scripts/install_libnds.sh
+scripts/install_examples.sh  # optional
 ```
-4. Move the decompressed files of devkitARM into `/ANY_FOLDER/devkitPro/devkitARM` and the decompressed files of
-   `libnds.tar.bz2` into
-   `/ANY_FOLDER/devkitPro/libnds`
-5. Install `make` using your package manager `sudo apt install -y make` and use `make` to try to compile your software.
-6. If the `#include <nds.h>` directive does not found the corresponding file, add the `include` folder from the `libnds`
-   into the `base_rules` of devkitPro: `$(CC) -I/ANY_FOLDER/devkitPro/libnds/include/ -c myfile.c`
-7. Afterwards, if it still does not work, you will need to add the binaries of the libnds library manually into
-   `ds_rules` for linking `.o` to `.elf`. The error after step 6 looked like this:
-```
-/bmde/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/6.3.0/../../../../arm-none-eabi/bin/ld: cannot find -lnds9
-```
-You need to add `-L/path/to/libnds` to the corresponding `Makefile` rule (the one that is failing).
-8. Finally, the `ndstool` will be complaining about not finding the `default.elf`, which to solve I move to the
-   location were `ndstool` was expecting the file. I could not change the "rule" files like I did in previous steps 
-   because
-   I could not find a way to configure `ndstool` to use the `default.elf` file from another location.
-9. Finally, you can open a terminal in the project that you want to compile and execute `make` to compile the project.
-   The projects can be located in any path of your liking.
 
-Installation steps may change, specially the ones regarding the specification of paths of libraries in the base rules of
-the devkitARM toolchain. Luckily, when building the container, we do not needed to specify the path of any libraries.
-They were found automatically.
+Open a new session (or run `. /etc/profile.d/bmde-devkitpro.sh`) and test the installation with the `test/test_*.sh`
+scripts. See the [host components installation](https://github.com/URV-teacher/bmde/blob/master/docs/getting-started/host_components_installation.md)
+guide of bmde for the details.
 
 ## Run `.nds` files into DeSmuME
 At this moment, I recommend using `flatpak` to run DeSmuME:
@@ -258,7 +228,7 @@ To build the Docker image.
 ```shell
 cd bmde-linux
 docker container rm bmde-linux  # To remove the container if already exists
-BUILDKIT_PROGRESS=plain docker build --rm bmde -t aleixmt/bmde-linux:latest . 
+BUILDKIT_PROGRESS=plain docker build -t aleixmt/bmde-linux:latest .
 ```
 
 ## Push image to dockerhub

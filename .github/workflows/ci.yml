@@ -1,0 +1,26 @@
+# Builds and tests the image of the component, and installs and tests the component in an Ubuntu machine with the
+# install scripts. The jobs are the reusable workflows of the bmde repository, shared by all the components.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  image:
+    uses: URV-teacher/bmde/.github/workflows/component-image.yml@master
+    with:
+      image: aleixmt/bmde-linux
+      # The reusable workflows run the tests from scripts/, so they are referenced relative to it
+      tests: ../test/test_make.sh ../test/test_devkitarm.sh ../test/test_libnds.sh ../test/test_examples.sh
+    secrets: inherit
+
+  host:
+    uses: URV-teacher/bmde/.github/workflows/component-host.yml@master
+    with:
+      install: install_make.sh install_devkitarm.sh install_libnds.sh install_examples.sh
+      # The reusable workflows run the tests from scripts/, so they are referenced relative to it
+      tests: >-
+        ../test/test_make.sh ../test/test_devkitarm.sh ../test/test_libnds.sh ../test/test_examples.sh
+        ../test/test_operation.sh
