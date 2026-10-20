@@ -9,11 +9,14 @@ SUDO=""; if [ "$(id -u)" -ne 0 ]; then SUDO=sudo; fi
 DEVKITPRO="${BMDE_ROOT}/devkitPro"
 DEVKITARM="${DEVKITPRO}/devkitARM"
 DEVKITARM_URL="https://wii.leseratte10.de/devkitPro/devkitARM/r46%20%282017%29/devkitARM_r46-x86_64-linux.tar.bz2"
+# Pinned, so a changed or tampered download fails instead of being installed
+DEVKITARM_SHA256="388b5f5a8f09ccee00073b799ac922aed099b2e0cafcca0d25a5a18b779194ae"
 
 if [ ! -x "${DEVKITARM}/bin/arm-none-eabi-gcc" ]; then
   ${SUDO} apt-get update
   ${SUDO} apt-get install -y --no-install-recommends ca-certificates wget bzip2
-  wget --no-check-certificate "${DEVKITARM_URL}" -O /tmp/devkitARM.tar.bz2
+  wget "${DEVKITARM_URL}" -O /tmp/devkitARM.tar.bz2
+  echo "${DEVKITARM_SHA256}  /tmp/devkitARM.tar.bz2" | sha256sum -c --quiet
   ${SUDO} mkdir -p "${DEVKITPRO}"
   ${SUDO} rm -rf "${DEVKITARM}"
   ${SUDO} tar -xjf /tmp/devkitARM.tar.bz2 -C "${DEVKITPRO}"
