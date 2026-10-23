@@ -57,4 +57,3 @@ dkms.conf
 # Assets downloaded by scripts/download_assets.sh, except the ones stored in the repository
 assets/*
 !assets/libnds.tar.bz2
-!assets/examples.tar.bz2
