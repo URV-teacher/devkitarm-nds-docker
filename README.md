@@ -43,7 +43,7 @@ Version 46, downloaded from [here](https://wii.leseratte10.de/devkitPro/devkitAR
 |--------------|-----------------|-------------------------------------------------------------------|
 | msys         | 1.0.17-1        | Not needed since we already have a working Linux environment      |
 | 3dsexamples  | 20170226        | Not needed for compilation, can be included afterwards            |
-| ndsexamples  | 20170124        | Not needed for compilation, can be included afterwards            |
+| ndsexamples  | 20170124        | Not in the image; installed by `src/install_examples.sh` (the BMDE full image includes them) |
 | gbaexamples  | 20170228        | Not needed for compilation, can be included afterwards            |
 | gp32examples | 20051021        | Not needed for compilation, can be included afterwards            |
 | insight      | 7.3.50.20110803 | Not needed, we do not want to debug the software, only compile it |
@@ -190,13 +190,14 @@ run` command to mount a volume. I will not explain it because it is better to us
 compose`, which automatically mounts volumes.
 
 ## Install it directly into your Linux system for manual usage
-`scripts/download_assets.sh` downloads devkitARM r46 (and the project used by the tests) into `assets/`, checking it
-against its pinned SHA-256 (see
+`scripts/download_assets.sh` downloads devkitARM r46, the NDS examples of devkitPro (from
+[devkitPro/nds-examples](https://github.com/devkitPro/nds-examples), at the version of the original BMDE, `v20170124`)
+and the project used by the tests into `assets/`, checking them against their pinned SHA-256 (see
 [external resources](https://github.com/URV-teacher/bmde/blob/master/docs/development/external-resources.md) of bmde).
 Then the scripts in `src/` install the same environment of the image into an Ubuntu / Debian system (the image is built
 with them), into `/URV/bmde/devkitPro`, with its environment (`DEVKITPRO`, `DEVKITARM`, `PATH`) in
-`/etc/profile.d/bmde-devkitpro.sh`, taking the files only from `src/` and `assets/` (where libnds and the examples of
-the course are stored in the repository):
+`/etc/profile.d/bmde-devkitpro.sh`, taking the files only from `src/` and `assets/` (where the libnds of the course is
+stored in the repository). The image does not include the examples (the BMDE full image does):
 ```shell
 scripts/download_assets.sh
 src/install_make.sh
@@ -285,7 +286,8 @@ bmde-linux-test-1  | 65 out of 76 tests passed.
 their binaries with the SHA-1 of the binaries built by the Windows BMDE (`test/windows_builds.sha1`). It fails if a
 binary differs, unless it is one of the known differences (`test/windows_builds_known_differences.txt`): the ones above,
 and `nitrodir.nds`, which embeds the files of `nitrofiles/` in the order in which the file system lists them (it is the
-same binary when they are listed alphabetically, as in Windows). Run it in the image:
+same binary when they are listed alphabetically, as in Windows). Run it in the image (the image does not include the
+examples, so the test installs them with `src/install_examples.sh` into a temporary directory):
 
 ```shell
 docker run --rm --entrypoint bash -v "$PWD:/component:ro" aleixmt/bmde-linux /component/test/test_windows_builds.sh

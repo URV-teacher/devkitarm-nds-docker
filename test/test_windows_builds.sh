@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Tests that the devkitARM, libnds and examples of the BMDE build the same binaries as the Windows BMDE: builds the
 # examples of devkitPro listed in windows_builds.sha1 and compares their binaries with the SHA-1 of the binaries built
-# by the Windows BMDE (needs devkitARM, libnds and the examples). Fails if a binary differs, unless it is a known
-# difference (windows_builds_known_differences.txt).
+# by the Windows BMDE (needs devkitARM and libnds). Fails if a binary differs, unless it is a known difference
+# (windows_builds_known_differences.txt). If the examples are not installed (e.g. in the image of the component, which
+# does not include them), installs them into a temporary directory with install_examples.sh.
 set -Eeuo pipefail
 
 : "${DEVKITPRO:?DEVKITPRO is not set: open a new session or run . /etc/profile.d/bmde-devkitpro.sh}"
@@ -11,7 +12,12 @@ CHECKSUMS="${TEST_DIR}/windows_builds.sha1"
 KNOWN_DIFFERENCES="${TEST_DIR}/windows_builds_known_differences.txt"
 
 work_dir="$(mktemp -d)"
-cp -r "${DEVKITPRO}/examples/nds/." "${work_dir}"
+examples="${DEVKITPRO}/examples/nds"
+if [ ! -d "${examples}" ]; then
+  BMDE_ROOT="${work_dir}/root" "${TEST_DIR}/../src/install_examples.sh"
+  examples="${work_dir}/root/devkitPro/examples/nds"
+fi
+cp -r "${examples}/." "${work_dir}"
 # Project of each binary (libraries are built into the lib/ folder of their project)
 cut -d ' ' -f 3 "${CHECKSUMS}" | xargs -n 1 dirname | sed 's|/lib$||' | sort -u | while read -r project; do
   # make clean first: some examples have binaries already built
