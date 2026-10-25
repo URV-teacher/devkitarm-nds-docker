@@ -57,7 +57,7 @@ Version 46, downloaded from [here](https://wii.leseratte10.de/devkitPro/devkitAR
 ### Manually
 ###### Download `docker-compose.yml`
 Inside the root of your homebrew project (in the same folder as a `Makefile`) download
-[this `docker-compose.yml`](https://raw.githubusercontent.com/URV-teacher/bmde-linux/master/examples/compose.yml).
+[this `docker-compose.yml`](https://raw.githubusercontent.com/URV-teacher/devkitarm-nds-docker/master/examples/compose.yml).
 
 ###### Run container
 Afterward, use `docker compose up` to run the container, which will compile the software. 
@@ -71,7 +71,7 @@ You can clean the used images, containers and volumes using Docker Desktop.
 You can also do these steps from the terminal:
 ```shell
 cd my-project
-wget https://raw.githubusercontent.com/URV-teacher/bmde-linux/master/examples/compose.yml  # Download compose.yml
+wget https://raw.githubusercontent.com/URV-teacher/devkitarm-nds-docker/master/examples/compose.yml  # Download compose.yml
 docker compose up  # Run container 
 docker system prune -af  # Clean images and containers
 docker volume prune -af  # Clean volumes
@@ -101,17 +101,17 @@ You can also run the BMDE environment with your homebrew project inside if you w
 container image
 or want to do the compilation process of your software manually.
 ```shell
-docker compose run --entrypoint /bin/bash bmde-linux
+docker compose run --entrypoint /bin/bash devkitarm-nds
 # Type commands you want in a shell inside the container
 ```
 
 
 ## Customizing / extending the BMDE environment container
 Inside your project folder, create a `Dockerfile` with a `FROM` directive that points to the Docker container of
-`bmde-linux`:
+`devkitarm-nds`:
 ```dockerfile
-# Extend bmde-linux container
-FROM aleixmt/bmde-linux:latest
+# Extend devkitarm-nds container
+FROM aleixmt/devkitarm-nds:latest
 # Add any more instruction for the building of your image, you way want to COPY .
 # COPY . /input  # You may want to add COPY directives to copy files from your project to the container image
 ```
@@ -165,7 +165,7 @@ After this, just run `docker compose up` and the files created by the container 
 ## Use environment for manual usage inside container through `docker run`
 With docker installed, use:
 ```shell
-docker run -it aleixmt/bmde-linux:latest
+docker run -it aleixmt/devkitarm-nds:latest
 ```
 
 Since we are running the image directly without loading any data inside it, we will enter inside the container in
@@ -223,31 +223,31 @@ This will run DeSmuME in a containerized manner, using another container technol
 # Developer usage
 Clone the repository, enter the project folder and run an IDE to run in the project.
 ```shell
-git clone https://github.com/URV-teacher/bmde-linux
-cd bmde-linux
+git clone https://github.com/URV-teacher/devkitarm-nds-docker
+cd devkitarm-nds-docker
 pycharm .
 ```
 
 ## Building
 To build the Docker image.
 ```shell
-cd bmde-linux
-docker container rm bmde-linux  # To remove the container if already exists
-BUILDKIT_PROGRESS=plain docker build -t aleixmt/bmde-linux:latest .
+cd devkitarm-nds-docker
+docker container rm devkitarm-nds  # To remove the container if already exists
+BUILDKIT_PROGRESS=plain docker build -t aleixmt/devkitarm-nds:latest .
 ```
 
 ## Push image to dockerhub
 To push it to Dockerhub (needs authentication first).
 ```shell
-docker push aleixmt/bmde-linux:latest
+docker push aleixmt/devkitarm-nds:latest
 ```
 
 ## Run and force rebuild of image 
 To make a "clean" run of the image, because we force the rebuild of the base image. 
 ```shell
-cd bmde-linux
-docker container rm bmde-linux  # To remove the container if already exists
-BUILDKIT_PROGRESS=plain docker compose up --build --rm bmde-linux
+cd devkitarm-nds-docker
+docker container rm devkitarm-nds  # To remove the container if already exists
+BUILDKIT_PROGRESS=plain docker compose up --build --rm devkitarm-nds
 ```
 
 ## Test with real example
@@ -256,7 +256,7 @@ which is a very simple homebrew project that prints hello world in the NDS scree
 ```shell
 git clone https://github.com/URV-teacher/hello-world-nds
 cd hello-world-nds
-wget https://raw.githubusercontent.com/URV-teacher/bmde-linux/master/examples/compose.yml  # Once per makefile
+wget https://raw.githubusercontent.com/URV-teacher/devkitarm-nds-docker/master/examples/compose.yml  # Once per makefile
 docker compose up  # With the working directory of the shell in the same folder as Makefile and compose.yml
 ```
 
@@ -268,18 +268,18 @@ for equality.
 
 The results are the following:
 ```
-bmde-linux-test-1  | Test failed for 256_color_bmp/win_build/256_color_bmp.nds 8c85fdc4e3c56e812c358dda222ea9c733641005 different than 256_color_bmp/256_color_bmp.nds 18d459992646baffa26396eb71025f172ad2215e
-bmde-linux-test-1  | Test failed for Display_List/win_build/Display_List.nds 3f2e8145a270b02a5b26ba2d0c0694e922044fd0 different than Display_List/Display_List.nds 9dd03041e53200b9ebb183b0239f07b6bd503fad
-bmde-linux-test-1  | Test failed for Display_List_2/win_build/Display_List_2.nds 476858e06d353b4d7c51a1669310653f4b2c135b different than Display_List_2/Display_List_2.nds 27bd63d6b8254adbbaf78458b3ce6e39507c45af
-bmde-linux-test-1  | Test failed for Env_Mapping/win_build/Env_Mapping.nds f0aa9b6cdb7456b15a0f79ca2e8d9246332f8891 different than Env_Mapping/Env_Mapping.nds 540f85029bb49de3d06c9a54b822a56bc0549ddf
-bmde-linux-test-1  | Test failed for Picking/win_build/Picking.nds b8ed0e9f41b670f88731fde2d94218b99862823b different than Picking/Picking.nds a4c62651dc008c9f0dc904b469a4fd20f677b6e4
-bmde-linux-test-1  | Test failed for Toon_Shading/win_build/Toon_Shading.nds badd96db180299680955bc52609043f80ba4fc0e different than Toon_Shading/Toon_Shading.nds 1a6f0f622f2aba3766df685fe48bb17fb0c89457
-bmde-linux-test-1  | Test failed for all_in_one/win_build/all_in_one.nds 595de1cc99b4709db6a06c1c16b001b8cb3292e4 different than all_in_one/all_in_one.nds 943b3d45af4f078d87245f562b08015f859f8d50
-bmde-linux-test-1  | Test failed for backgrounds/win_build/backgrounds.nds 5ef537a489be5f93edf37c10e8fece3968b7a91e different than backgrounds/backgrounds.nds 4eb04b66d80fbb58065c3a234284a6d5b8469d08
-bmde-linux-test-1  | Test failed for rotation/win_build/rotation.nds f53794e9369e65a236ffa45759ff20f3b0d95574 different than rotation/rotation.nds 9106c5f5e0b682f8e9b9c6b45f29307984272aff
-bmde-linux-test-1  | Test failed for windows/win_build/windows.nds 9874bcc7b20b93b206b0afa8d4a2d4081fcf5263 different than windows/windows.nds ec813391a241ffa8c90ded34a98392b0e4864331
-bmde-linux-test-1  | Test failed for arm9lib/win_build/libarm9lib.a c28f729e521b55193052832973b4b31985969b8e different than arm9lib/lib/libarm9lib.a c2b2b948d152066d85458ac2f23fcbd5b7deab8d
-bmde-linux-test-1  | 65 out of 76 tests passed.
+devkitarm-nds-docker-test-1  | Test failed for 256_color_bmp/win_build/256_color_bmp.nds 8c85fdc4e3c56e812c358dda222ea9c733641005 different than 256_color_bmp/256_color_bmp.nds 18d459992646baffa26396eb71025f172ad2215e
+devkitarm-nds-docker-test-1  | Test failed for Display_List/win_build/Display_List.nds 3f2e8145a270b02a5b26ba2d0c0694e922044fd0 different than Display_List/Display_List.nds 9dd03041e53200b9ebb183b0239f07b6bd503fad
+devkitarm-nds-docker-test-1  | Test failed for Display_List_2/win_build/Display_List_2.nds 476858e06d353b4d7c51a1669310653f4b2c135b different than Display_List_2/Display_List_2.nds 27bd63d6b8254adbbaf78458b3ce6e39507c45af
+devkitarm-nds-docker-test-1  | Test failed for Env_Mapping/win_build/Env_Mapping.nds f0aa9b6cdb7456b15a0f79ca2e8d9246332f8891 different than Env_Mapping/Env_Mapping.nds 540f85029bb49de3d06c9a54b822a56bc0549ddf
+devkitarm-nds-docker-test-1  | Test failed for Picking/win_build/Picking.nds b8ed0e9f41b670f88731fde2d94218b99862823b different than Picking/Picking.nds a4c62651dc008c9f0dc904b469a4fd20f677b6e4
+devkitarm-nds-docker-test-1  | Test failed for Toon_Shading/win_build/Toon_Shading.nds badd96db180299680955bc52609043f80ba4fc0e different than Toon_Shading/Toon_Shading.nds 1a6f0f622f2aba3766df685fe48bb17fb0c89457
+devkitarm-nds-docker-test-1  | Test failed for all_in_one/win_build/all_in_one.nds 595de1cc99b4709db6a06c1c16b001b8cb3292e4 different than all_in_one/all_in_one.nds 943b3d45af4f078d87245f562b08015f859f8d50
+devkitarm-nds-docker-test-1  | Test failed for backgrounds/win_build/backgrounds.nds 5ef537a489be5f93edf37c10e8fece3968b7a91e different than backgrounds/backgrounds.nds 4eb04b66d80fbb58065c3a234284a6d5b8469d08
+devkitarm-nds-docker-test-1  | Test failed for rotation/win_build/rotation.nds f53794e9369e65a236ffa45759ff20f3b0d95574 different than rotation/rotation.nds 9106c5f5e0b682f8e9b9c6b45f29307984272aff
+devkitarm-nds-docker-test-1  | Test failed for windows/win_build/windows.nds 9874bcc7b20b93b206b0afa8d4a2d4081fcf5263 different than windows/windows.nds ec813391a241ffa8c90ded34a98392b0e4864331
+devkitarm-nds-docker-test-1  | Test failed for arm9lib/win_build/libarm9lib.a c28f729e521b55193052832973b4b31985969b8e different than arm9lib/lib/libarm9lib.a c2b2b948d152066d85458ac2f23fcbd5b7deab8d
+devkitarm-nds-docker-test-1  | 65 out of 76 tests passed.
 ```
 
 `test/test_windows_builds.sh` repeats this comparison: it builds the examples with the installed devkitARM and compares
@@ -290,7 +290,7 @@ same binary when they are listed alphabetically, as in Windows). Run it in the i
 examples, so the test installs them with `src/install_examples.sh` into a temporary directory):
 
 ```shell
-docker run --rm --entrypoint bash -v "$PWD:/component:ro" aleixmt/bmde-linux /component/test/test_windows_builds.sh
+docker run --rm --entrypoint bash -v "$PWD:/component:ro" aleixmt/devkitarm-nds /component/test/test_windows_builds.sh
 ```
 
 
