@@ -1,5 +1,5 @@
 # Use a lightweight base image
-FROM aleixmt/bmde-linux:latest
+FROM aleixmt/devkitarm-nds:latest
 
 # Modify base image if desired
 
