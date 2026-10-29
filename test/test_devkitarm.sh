@@ -8,3 +8,4 @@ arm-none-eabi-gcc --version
 arm-none-eabi-as --version
 arm-none-eabi-ld --version
 ndstool | head -n 1
+echo "devkitARM OK"

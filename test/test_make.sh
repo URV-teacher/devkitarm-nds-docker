@@ -3,3 +3,4 @@
 set -Eeuo pipefail
 
 make --version
+echo "make OK"

@@ -10,3 +10,4 @@ tar -xzf "$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)/../assets/hello-worl
 make -C "${work_dir}/hello-world-nds"
 ls "${work_dir}"/hello-world-nds/*.nds
 rm -rf "${work_dir}"
+echo "build operation OK"

@@ -18,3 +18,4 @@ for example in "${build_dir}"/hello_world/ "${build_dir}"/time/; do
   find "${example}" -name '*.nds' | grep .
 done
 rm -rf "${build_dir}"
+echo "devkitPro examples OK"
